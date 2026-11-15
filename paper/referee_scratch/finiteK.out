@@ -1,0 +1,4 @@
+(P,Q)=(2,-1) K=20 dps=3000: logNC/K^3logeta=1.19089 log|Delta|/..=-0.26107196 log|sDelta|/..=-1.0511286 TOTAL=-0.121312
+(P,Q)=(2,-1) K=20 dps=4500: logNC/K^3logeta=1.19089 log|Delta|/..=-0.26107196 log|sDelta|/..=-1.0511286 TOTAL=-0.121312
+(P,Q)=(3,1) K=20 dps=3000: logNC/K^3logeta=1.1776 log|Delta|/..=-0.26575596 log|sDelta|/..=-1.0531821 TOTAL=-0.141338
+(P,Q)=(2,-1) K=25 dps=5000: logNC/K^3logeta=1.17812 log|Delta|/..=-0.25374955 log|sDelta|/..=-1.0406771 TOTAL=-0.116306

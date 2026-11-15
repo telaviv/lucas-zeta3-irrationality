@@ -135,7 +135,8 @@ $U_{kn}=U_kU'_n$ with $U'$ the Lucas sequence of the unit $\eta^k$. The normalis
 alternating sums $\sum_n(-1)^{n-1}U_n(P,-1)^{-3}=\sum_nU_n(-P,-1)^{-3}$.
 
 \subsection*{Formal verification}
-The theorem and every step of its proof are formalised in Lean~4 with Mathlib (Section~\ref{sec:lean}). The analytic
+The theorem and every step of its proof are formalised in Lean~4 with Mathlib
+(\url{https://github.com/telaviv/lucas-zeta3-irrationality}; Section~\ref{sec:lean}). The analytic
 ingredients are formalised for every real $t$ with $0<t\le\varphi^{-1}$ and both signs, and the integrality statement
 for every real $\tau\ne0$ that is not a root of unity, with one integer polynomial for all such $\tau$; only the final
 assembly uses that $t$ is the inverse of a quadratic unit.
@@ -537,8 +538,11 @@ author.
 \section{Formal verification}\label{sec:lean}
 % ===========================================================================
 
-% TODO(owner): repository URL once public.
-The Lean development (library \lean{LucasU}, Lean~4.35.0, Mathlib v4.35.0, about 9200 lines) generalises the formalisation of
+The Lean development is the repository
+\begin{center}
+\url{https://github.com/telaviv/lucas-zeta3-irrationality};
+\end{center}
+all file names below refer to it. It (library \lean{LucasU}, Lean~4.35.0, Mathlib v4.35.0, about 9200 lines) generalises the formalisation of
 \cite{Kri26} and proves
 \begin{center}
 \lean{theorem LucasU.irrational\_zetaU (hA : Admissible a E) : Irrational (zetaU a E)},
