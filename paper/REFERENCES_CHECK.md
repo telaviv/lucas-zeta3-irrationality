@@ -346,3 +346,9 @@ QZ3 note, which is fine because UPL is cited in the text.
 7. **QZ3.** "F. Solomon Admasu" matches `lean/CITATION.cff`; spell out "Fikreab".
 8. **Kri26.** Not public: no arXiv, and the Lean repository is private (404). Fix before submission, and call it a
    preprint in the priority sentence.
+
+## 6. Update (2026-11-15)
+
+The Lean repository cited in [Kri26], https://github.com/telaviv/fibonacci-zeta3-irrationality, is now public: an
+unauthenticated request returns HTTP 200, and the API reports visibility "public". The paper itself still has no public
+preprint identifier, so the entry keeps "preprint, 2026".
