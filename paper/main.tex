@@ -98,7 +98,8 @@ We follow \cite{Kri26}, which adapted to $\ZZ[\varphi]$ a construction of an unr
 value $\sum_nn^2/(p^n-1)$, $p\ge2$ an integer \cite{UPL,QZ3}; the construction is a moving-denominator Hankel
 determinant in the line of Uvarov \cite{Uva69}, Krattenthaler \cite{Kra21}, Pr\'evost \cite{Pre96} and Zudilin
 \cite{Zud16,Zud17}. A linear functional $L$, a second Euler derivative summed against the weights $(Qt)^n$ at the nodes
-$w^n$, has rational moments and pure simple-pole tails of $\Xi$. The Hankel determinants $\Delta_K(X)$ of $L$ against
+$w^n$, has moments $L(s^k)\in\QQ(\sqrt D)$, rational functions of $t$, and satisfies $L(1/(1-w^as))=\lambda_a(\Xi-S_a)$
+with explicit $\lambda_a$ and partial sums $S_a$ of \eqref{eq:Xi}. The Hankel determinants $\Delta_K(X)$ of $L$ against
 $D_K(s)=\prod_{a\le K}(1-w^as)$ satisfy $\Delta_K(\Xi)=\det[L(s^{i+j}/D_K)]$, and four estimates are combined:
 \begin{center}
 \small
@@ -113,16 +114,23 @@ nonvanishing & infinitely many $K$ & Proposition~\ref{prop:nonvan}\\
 \bottomrule
 \end{tabular}
 \end{center}
-If $\sum_nU_n^{-3}$ were rational, $C_K(t)(vD^2)^K\Delta_K(\Xi)$ would be a nonzero element of $\ZZ[\eta]$ of norm $<1$
+If $\sum_nU_n^{-3}$ were rational, $C_K(t)(mD^2)^K\Delta_K(\Xi)$, where $m$ is the denominator of the sum, would be a nonzero element of $\ZZ[\eta]$ of norm $<1$
 for large $K$.
 
 Compared with \cite{Kri26} there are three changes. First, the sign: for $Q=1$ the nodes $w^n=t^{2n}$ are positive and the
 roots of unity at which the coefficients have poles are of a different type (Section~\ref{sec:den}); the local
-arguments are unchanged, and only the classification of the roots and the count of the $\alpha$-roots change. Second,
+arguments are unchanged, only the classification of the roots changes, and the elementary count of the $\alpha$-roots
+used in the proof is the same for both signs (the difference appears only in the sharp constant of
+Remark~\ref{rem:sharp}). Second,
 the unit: all analytic estimates use only $0<t\le\varphi^{-1}$, which holds for every admissible $(P,Q)$, and every
 constant is a nondecreasing function of $t$ on that interval. Third, the order $\ZZ[\eta]$ need not be maximal; the
-argument uses only that the norm of a nonzero element of $\ZZ[\eta]$ is a nonzero rational integer. The present paper
-is self-contained.
+argument uses only that the norm of a nonzero element of $\ZZ[\eta]$ is a nonzero rational integer. Sections
+\ref{sec:setup}--\ref{sec:proof} follow \cite{Kri26} closely, often verbatim with $\varphi^{-1}$ replaced by $t$ and
+$-1$ by $Q$; we repeat the arguments so that the present paper is self-contained.
+
+The same argument gives $\sum_nU_{kn}^{-3}\notin\QQ$ for every admissible $(P,Q)$ and $k\ge1$, since
+$U_{kn}=U_kU'_n$ with $U'$ the Lucas sequence of the unit $\eta^k$. The normalisation $\eta>1$ does not cover the
+alternating sums $\sum_n(-1)^{n-1}U_n(P,-1)^{-3}=\sum_nU_n(-P,-1)^{-3}$.
 
 \subsection*{Formal verification}
 The theorem and every step of its proof are formalised in Lean~4 with Mathlib (Section~\ref{sec:lean}). The analytic
@@ -273,6 +281,8 @@ order $\le3$, and is regular if $a<e$;
 \item[(c)] $1-\alpha_k=1-Q^{k+1}\tau^{2k+1}$ is separable, so it has at most a simple zero at $\zeta$;
 \item[(d)] $\lambda_a$ and $x_a$ are Laurent monomials, hence units.
 \end{itemize}
+We call $\zeta$ a \emph{W-root} if $e(d)\le K$ and an \emph{$\alpha$-root} if $\alpha_k(\zeta)=1$ for some
+$1\le k\le K-2$; a \emph{pure W-root} is a W-root that is not an $\alpha$-root.
 
 \subsection{Local bounds}
 
@@ -283,9 +293,9 @@ $c(1)=0$, $c(m)=4(m-1)$ for $m\le6$, $c(m)\le(m+3)^2/4$, $c'(1)=3$ and $0\le c'-
 Let $e=e(d)\le K$ and partition $\{1,\dots,K\}$ into the clusters $I_r=\{a\equiv r\bmod e\}$ of sizes $m_r$,
 $1\le r\le e$. Then
 \[
--v(\Delta_{K,\tau})\le\sum_{r=1}^{e-1}c(m_r)+c'(m_e)+\epsilon\max(0,K-1-k_{\min}(d)),
+-v(\Delta_{K,\tau})\le\sum_{r=1}^{e-1}c(m_r)+c'(m_e)+\delta_\alpha\max(0,K-1-k_{\min}(d)),
 \]
-with $\epsilon=1$ if $\zeta$ is also an $\alpha$-root and $\epsilon=0$ otherwise.
+with $\delta_\alpha=1$ if $\zeta$ is also an $\alpha$-root and $\delta_\alpha=0$ otherwise.
 \end{proposition}
 \begin{proof}
 The proof of \cite[Proposition~4.2]{Kri26} uses only the facts (a)--(d) and the integrality of the quotient by $D_K$,
@@ -318,27 +328,34 @@ $\kappa_j+\kappa_k\ge m+2-j-k$, and (B) if $r<e$ and $\max(j,k)=m-1$, $\kappa_j+
 case (A) if both weights are positive the inequality is an equality; if $\kappa_k=0$, then $k\ge\frac{m+2}2$, so
 $\kappa_j\ge\frac{m+2}2-j\ge m+2-j-k$; if both vanish, the right side is $\le0$. Case (B) holds because $j+k\ge m-1$.
 Scale row $(r,j)$ by $\varpi^{\lceil\kappa_j\rceil}$ and column $(r,j)$ by $\varpi^{\lfloor\kappa_j\rfloor}$. Since
-$a+b\ge n\in\ZZ$ implies $\lceil a\rceil+\lfloor b\rfloor\ge n$, every scaled proper entry is integral, and the total
-scaling is $2\sum\kappa_j$, which is $c(m)$ for $r<e$ and $c'(m)$ for $r=e$. All exponents are $\ge0$.
+$a+b\ge n\in\ZZ$ implies $\lceil a\rceil+\lfloor b\rfloor\ge n$, every scaled proper entry is integral. Since
+$\kappa_j\in\tfrac12\ZZ$, $\lceil\kappa_j\rceil+\lfloor\kappa_j\rfloor=2\kappa_j$, so the total scaling is
+$2\sum\kappa_j$, which is $c(m)$ for $r<e$ and $c'(m)$ for $r=e$. All exponents are $\ge0$.
 
-\emph{Polynomial part.} The quotient of $NN'$ by $D_K$ has degree $\le K-2$ and coefficients in $\ZZ[\tau^{\pm1}]$, so
-$P^{\mathrm{pol}}=\sum_{k\le K-2}(\text{coeff})\nu_k$. At a pure W-root every $\nu_k$, $k\le K-2$, is regular, so the
-scaled matrix is integral; this gives the bound with $\epsilon=0$. At an $\alpha$-root, put
-$P_\alpha=\{k\le K-2:\alpha_k(\zeta)=1\}$ and write $\nu_k=\varpi^{-1}u_k$ with $u_k$ regular for $k\in P_\alpha$, by
-(c). Split $P^{\mathrm{pol}}=A^{\mathrm{pol}}+\varpi^{-1}B$ with $B(f,g)=\sum_{k\in P_\alpha}u_k(0)\,[s^k](fg/D_K)_+$
-and $A^{\mathrm{pol}}$ regular. If $\deg f\le k_{\min}$, the quotient of $fg$ has degree $<k_{\min}$, so $B(f,\cdot)=0$
-and $\operatorname{rank}B\le\max(0,K-1-k_{\min})$. After scaling the matrix is $A+\varpi^{-1}B'$ with $A$ integral and
-$\operatorname{rank}B'=\operatorname{rank}B$; expanding the determinant multilinearly in the columns, a term taking more
-than $\operatorname{rank}B$ columns from $\varpi^{-1}B'$ vanishes, and every other term has valuation
-$\ge-\max(0,K-1-k_{\min})$.
+\emph{Polynomial part.} Write $(\cdot)_+$ for the polynomial part (the quotient by $D_K$). The quotient of $NN'$ has
+degree $\le K-2$ and coefficients in $\ZZ[\tau^{\pm1}]$, so $P^{\mathrm{pol}}=\sum_{k\le K-2}[s^k](NN'/D_K)_+\,\nu_k$
+(with $\nu_0=0$). At a pure W-root every $\nu_k$, $1\le k\le K-2$, is regular, so the scaled matrix is integral; this
+gives the bound with $\delta_\alpha=0$. At an $\alpha$-root, put $P_\alpha=\{1\le k\le K-2:\alpha_k(\zeta)=1\}$ and
+write $\nu_k=\varpi^{-1}u_k$ with $u_k$ regular for $k\in P_\alpha$, by (c). Split $P^{\mathrm{pol}}=A^{\mathrm{pol}}+
+\varpi^{-1}B$, where $B(f,g)=\sum_{k\in P_\alpha}u_k(0)\,[s^k](fg/D_K)_+$ and $A^{\mathrm{pol}}$ collects
+$\varpi^{-1}(u_k-u_k(0))[s^k](\cdot)_+$ for $k\in P_\alpha$ and $\nu_k[s^k](\cdot)_+$ for $k\notin P_\alpha$; both have
+regular entries. If $\deg f\le k_{\min}$, then $\deg(fg)\le k_{\min}+K-1$, the quotient of $fg$ has degree
+$<k_{\min}$, and $B(f,\cdot)=0$; so $\operatorname{rank}B\le\max(0,K-1-k_{\min})$. After scaling the matrix is
+$A+\varpi^{-1}B'$, where $A$ (the scaled proper parts and the scaled $A^{\mathrm{pol}}$) is integral and $B'$ is $B$ in the
+Newton basis, scaled; $B'$ has regular entries and $\operatorname{rank}B'=\operatorname{rank}B$, since the basis change
+and the scalings are invertible over the fraction field. Expanding the determinant multilinearly in the columns, a term
+taking more than $\operatorname{rank}B$ columns from $\varpi^{-1}B'$ vanishes by linear dependence, and every other term
+has valuation $\ge-\max(0,K-1-k_{\min})$.
 \end{proof}
 
 \begin{lemma}\label{lem:alpha}
 If $e(d)>K$ and $\zeta$ is an $\alpha$-root, then $-v(\Delta_{K,\tau})\le\max(0,K-1-k_{\min}(d))$.
 \end{lemma}
 \begin{proof}
-In the monomial basis all $\Res_a$, $\lambda_a$ and $S_a$ ($a\le K<e$) are regular at $\zeta$ by (a)--(d); only the
-$\nu_k$, $k\in P_\alpha$, carry poles, and the rank argument of Proposition~\ref{prop:W} applies with no scaling.
+Work in the monomial basis. Since $e>K$, no difference $|a-b|<K$ and no $N\le K$ is divisible by $e$, so no factor
+$1-w^{b-a}$ and no $1-w^N$ vanishes at $\zeta$; hence all $\Res_a$, $\lambda_a$ and $S_a$ ($a\le K$) are regular at
+$\zeta$, by (c), (d). Only the $\nu_k$, $k\in P_\alpha$, carry poles, and the rank argument of Proposition~\ref{prop:W}
+applies with no scaling.
 \end{proof}
 
 \begin{proposition}\label{prop:global}
@@ -368,11 +385,14 @@ $|1-t^a|$ in the same way.
 Let $\beta_7=\prod_{p\le7}(1-p^{-2})=\frac{768}{1225}$ and $c_*=\frac{11}8\beta_7+\frac13=\frac{4393}{3675}=1.19537\ldots$.
 
 \begin{proposition}\label{prop:cost}
-$\log|\Nm C_K(t)|\le c_*K^3\log\eta+O(K^2\log K)$, with an implied constant independent of $(P,Q)$.
+$\log|\Nm C_K(t)|\le\bigl(c_*K^3+O(K^2\log K)\bigr)\log\eta$, with an absolute implied constant.
 \end{proposition}
 \begin{proof}
 By Lemma~\ref{lem:phid}, $\log|\Nm C_K(t)|\le\log\eta\sum_db_{K,d}\eu(d)+2\mathcal E_1\sum_db_{K,d}$, and
-$\sum_db_{K,d}=O(K^2\log K)$. Split $b_{K,d}$ into its W part and its $\alpha$ part.
+$2\mathcal E_1\le(2\mathcal E_1/\log\varphi)\log\eta$. Moreover $\sum_db_{K,d}=O(K^2\log K)$: for each $e\le K$ at most
+four orders $d$ have $e(d)=e$ (two if $Q=1$), each with a W part $\le4K+K^2/(4e)+3$ by the cluster bound below, and the
+at most $4K$ orders $d\le4K$ have $\alpha$ parts $\le K$; summing $K^2/(4e)$ over $e\le K$ gives $O(K^2\log K)$. Split
+$b_{K,d}$ into its W part and its $\alpha$ part.
 
 \emph{W part.} This part depends only on the cluster sizes and on the identity $\sum_{e(d)=e}\eu(d)=2\eu(e)$, which are
 the same for both signs, so the estimate of \cite[Proposition~4.6]{Kri26} applies verbatim. Since $m_r\ge1$, $\sum_rm_r=K$,
@@ -381,11 +401,17 @@ $m_r<K/e+1$ and $c(m)=4(m-1)+\delta(m)$ with $0\le\delta(m)\le\max(0,m-5)^2/4$,
 \sum_{r<e}c(m_r)+c'(m_e)\le4(K-e)+\frac{\max(0,K-4e)^2}{4e}+3.
 \]
 Bound $\eu(e)\le e\,g_7(e)$ with $g_7(e)=\prod_{p\le7,\,p\mid e}(1-1/p)$, a function of period $210$ with
-$0\le g_7\le1$ and mean $\beta_7$. If $g_7$ has period $P_0$, $0\le g_7\le1$ and mean $\beta$, and $f$ is a function
-on $[0,K]$ with $|f|\le M$ and total variation $V$, then
-$\bigl|\sum_{1\le e\le K}g_7(e)f(e)-\beta\int_0^Kf(y)\,dy\bigr|\le2P_0(M+V)$. With
-$f_K(y)=8y(K-y)+\tfrac12\max(0,K-4y)^2+6y$ the W part is at most
-$\beta_7\int_0^Kf_K+O(K^2)=\tfrac{11}8\beta_7K^3+O(K^2)$.
+$0\le g_7\le1$ and mean $\beta_7$. Summing over the orders $d$ with $e(d)=e$ gives the weight
+$\sum_{e(d)=e}\eu(d)=2\eu(e)\le2e\,g_7(e)$, so the W part is at most $\sum_{e\le K}g_7(e)f_K(e)$ with
+$f_K(y)=8y(K-y)+\tfrac12\max(0,K-4y)^2+6y$. We use the elementary averaging estimate: if $g$ has period $\ell$,
+$0\le g\le1$ and mean $\beta$, and $f$ is a function on $[0,K]$ with $|f|\le M$ and total variation $V$, then
+\[
+\Bigl|\sum_{1\le e\le K}g(e)f(e)-\beta\int_0^Kf(y)\,dy\Bigr|\le2\ell(M+V).
+\]
+(Cut $[0,K]$ into blocks of length $\ell$. On a full block $(e_0,e_0+\ell]$ both $\sum g(e)f(e)$ and $\beta\int f$
+differ from $\ell\beta f(e_0)$ by at most $\ell$ times the oscillation of $f$ on the block; the oscillations add up to at
+most $V$, and the last, incomplete block costs at most $2\ell M$.) For $f_K$ we have $M,V=O(K^2)$, so the W part is at
+most $\beta_7\int_0^Kf_K+O(K^2)=\tfrac{11}8\beta_7K^3+O(K^2)$.
 
 \emph{$\alpha$ part.} $\max(0,K-1-k_{\min})$ counts the $k\in[k_{\min},K-2]$, so
 \[
@@ -429,9 +455,14 @@ and at $X=-\Xi$ this is $2t^ar_a^{-1}\sum_{N>a}\psi_N=\Gamma(r_a)$, using $t^{4a
 $w^{a+M}=r_aw^M$, where
 \[
 \Gamma(r)=2r\sum_{M\ge1}\frac{t^{3M}}{(1-rw^M)^3}=\sum_{n\ge1}\gamma_nr^n,\qquad
-|\gamma_n|\le\frac{n(n+1)t^{2n+1}}{1-t^3}.
+\gamma_n=n(n+1)\sum_{M\ge1}t^{3M}w^{M(n-1)},
 \]
-Partial fractions and $\sum_ar_a^m/(F^\sigma)'(r_a)=h_{m-K+1}(r)$ give
+analytic on $|r|<\eta^2$, with $|\gamma_n|\le n(n+1)t^{2n+1}/(1-t^{2n+1})\le n(n+1)t^{2n+1}/(1-t^3)$. Partial fractions
+give
+\[
+\frac{s^k}{F^\sigma(s)}=\sum_{j=0}^{k-K}h_{k-K-j}(r)\,s^j+\sum_{a=1}^K\frac{r_a^k}{(F^\sigma)'(r_a)(s-r_a)},
+\]
+and with $\sum_ar_a^m/(F^\sigma)'(r_a)=h_{m-K+1}(r)$ we get
 \[
 Y_k(-\Xi)=\sum_{j=0}^{k-K}h_{k-K-j}(r)\,\sigma\nu_j+\sum_{n\ge1}\gamma_nh_{k+n-K+1}(r).
 \]
@@ -455,19 +486,19 @@ $\Delta_K(\Xi)\ne0$ for infinitely many $K$.
 The proof of \cite[Proposition~6.1]{Kri26} uses only $0<|w|<1$, $\rho\ne0$ and the distinctness of the nodes; we repeat
 it. Let $\cC(z)=L(1/(z-s))=\sum_n\rho^n\,2w^nz/(z-w^n)^3$ for $|z|>t^2$. It continues to $\CC\setminus\{0\}$ with a pole
 of order exactly $3$ at each $w^n$ (leading coefficient $2\rho^nw^{2n}\ne0$), so it is not rational; it is analytic at
-$\infty$ and $O(1/z)$. For $\deg Q_1\le n-1$ put $H_{n,Q_1}(z)=L\bigl(Q_1(s)/((z-s)D_n(s))\bigr)$, analytic for $|z|>t^2$
+$\infty$ and $O(1/z)$. For $\deg R\le n-1$ put $H_{n,R}(z)=L\bigl(R(s)/((z-s)D_n(s))\bigr)$, analytic for $|z|>t^2$
 and in particular at every $x_a$, and
 \[
-T_{n,Q_1}(z)=L\Bigl(\frac{Q_1(z)D_n(s)-D_n(z)Q_1(s)}{(z-s)D_n(s)}\Bigr),
+T_{n,R}(z)=L\Bigl(\frac{R(z)D_n(s)-D_n(z)R(s)}{(z-s)D_n(s)}\Bigr),
 \]
-a polynomial in $z$ of degree $\le n-1$. Then $\cC Q_1-T_{n,Q_1}=D_nH_{n,Q_1}$.
+a polynomial in $z$ of degree $\le n-1$. Then $\cC R-T_{n,R}=D_nH_{n,R}$.
 
-If $\Delta_n(\Xi)=0$, any kernel vector gives $Q_n\ne0$ of degree $\le n-1$ with $L(s^jQ_n/D_n)=0$ for $j<n$. Put
-$T_n=T_{n,Q_n}$ and $E_n=\cC Q_n-T_n$. Expanding $(z-s)^{-1}=\sum_js^jz^{-j-1}$, uniformly with two $s$-derivatives on
-$|s|\le t^2$ for $|z|>t^2+\varepsilon$, gives $H_{n,Q_n}(z)=O(z^{-n-1})$, so $E_n=O(z^{-1})$ and $E_n(x_a)=0$ for $a\le n$.
-If $\Delta_n(\Xi)=\Delta_{n+1}(\Xi)=0$, then $V=T_{n+1}Q_n-T_nQ_{n+1}=Q_{n+1}E_n-Q_nE_{n+1}$ is a polynomial,
-$O(z^{n-1})$, vanishing at $x_1,\dots,x_n$; so $V=0$ and $T_n/Q_n=T_{n+1}/Q_{n+1}$. If $\Delta_n(\Xi)=0$ for all $n\ge N$,
-all $T_n/Q_n$ equal one reduced fraction $T/Q_2$, so $Q_n=U'_nQ_2$, $T_n=U'_nT$, and $E:=\cC Q_2-T\ne0$. Then
+If $\Delta_n(\Xi)=0$, any kernel vector gives $R_n\ne0$ of degree $\le n-1$ with $L(s^jR_n/D_n)=0$ for $j<n$. Put
+$T_n=T_{n,R_n}$ and $E_n=\cC R_n-T_n$. Expanding $(z-s)^{-1}=\sum_js^jz^{-j-1}$, uniformly with two $s$-derivatives on
+$|s|\le t^2$ for $|z|>t^2+\epsilon_0$ ($\epsilon_0>0$), gives $H_{n,R_n}(z)=O(z^{-n-1})$, so $E_n=O(z^{-1})$ and $E_n(x_a)=0$ for $a\le n$.
+If $\Delta_n(\Xi)=\Delta_{n+1}(\Xi)=0$, then $V_0=T_{n+1}R_n-T_nR_{n+1}=R_{n+1}E_n-R_nE_{n+1}$ is a polynomial,
+$O(z^{n-1})$, vanishing at $x_1,\dots,x_n$; so $V_0=0$ and $T_n/R_n=T_{n+1}/R_{n+1}$. If $\Delta_n(\Xi)=0$ for all $n\ge N$,
+all $T_n/R_n$ equal one reduced fraction $T/R_0$, so $R_n=U'_nR_0$, $T_n=U'_nT$, and $E:=\cC R_0-T\ne0$. Then
 $U'_nE=E_n=O(1/z)$ forces $E=c_0z^{-q}(1+o(1))$ with $c_0\ne0$, $q\ge1$, and $\deg U'_n\le q-1$; but $E(x_a)\ne0$ for all
 large $a$ while $E_n(x_a)=0$, so $U'_n(x_a)=0$ for all large $a\le n$, too many zeros once $n$ is large.
 \end{proof}
@@ -476,15 +507,15 @@ large $a$ while $E_n(x_a)=0$, so $U'_n(x_a)=0$ for all large $a\le n$, too many 
 \section{\texorpdfstring{Proof of Theorem~\ref{thm:main}}{Proof of the theorem}}\label{sec:proof}
 % ===========================================================================
 
-Suppose $\sum_nU_n^{-3}=u/v$ with $u\in\ZZ$, $v\in\ZZ_{>0}$. By \eqref{eq:Xi} and Lemma~\ref{lem:unit}(iv),
-$\Xi=u\sqrt D/(vD^2)=u(P-2Qt)/(vD^2)$ and $\sigma\Xi=-\Xi$. For $K$ in the infinite set of Proposition~\ref{prop:nonvan}
-put $y_K=C_K(t)(vD^2)^K\Delta_K(\Xi)$. By Proposition~\ref{prop:global}, $y_K\in\cO$, and $y_K\ne0$ because
+Suppose $\sum_nU_n^{-3}=u/m$ with $u\in\ZZ$, $m\in\ZZ_{>0}$. By \eqref{eq:Xi} and Lemma~\ref{lem:unit}(iv),
+$\Xi=u\sqrt D/(mD^2)=u(P-2Qt)/(mD^2)$ and $\sigma\Xi=-\Xi$. For $K$ in the infinite set of Proposition~\ref{prop:nonvan}
+put $y_K=C_K(t)(mD^2)^K\Delta_K(\Xi)$. By Proposition~\ref{prop:global}, $y_K\in\cO$, and $y_K\ne0$ because
 $\Delta_K(\Xi)\ne0$ and $C_K(t)\ne0$ ($t$ is not a root of unity). Moreover
-$\sigma y_K=C_K(\sigma t)(vD^2)^K\sigma\Delta_K(-\Xi)$. The norm $y_K\,\sigma y_K$ of the nonzero algebraic integer $y_K$
+$\sigma y_K=C_K(\sigma t)(mD^2)^K\sigma\Delta_K(-\Xi)$. The norm $y_K\,\sigma y_K$ of the nonzero algebraic integer $y_K$
 is a nonzero rational integer, so $|y_K\,\sigma y_K|\ge1$, and by Propositions~\ref{prop:decay}, \ref{prop:conj} and
 \ref{prop:cost}
 \begin{multline*}
-0\le\log|\Nm C_K(t)|+2K\log(vD^2)+\log|\Delta_K(\Xi)|+\log|\sigma\Delta_K(-\Xi)|\\
+0\le\log|\Nm C_K(t)|+2K\log(mD^2)+\log|\Delta_K(\Xi)|+\log|\sigma\Delta_K(-\Xi)|\\
 \le\bigl(c_*-\tfrac29-1\bigr)K^3\log\eta+O(K^2\log K).
 \end{multline*}
 Since $c_*-\tfrac{11}9=\tfrac{11}8\beta_7-\tfrac89=-0.02684\ldots<0$, this fails for large $K$. \qed
@@ -492,10 +523,12 @@ Since $c_*-\tfrac{11}9=\tfrac{11}8\beta_7-\tfrac89=-0.02684\ldots<0$, this fails
 \begin{remark}
 Not used in the proof. With the constants of Remark~\ref{rem:sharp} the margin is at least $0.0914$ ($Q=-1$) and
 $0.1214$ ($Q=1$) per $K^3\log\eta$. At finite $K$, computed with exact determinants over $\QQ(\sqrt D)$ and interval
-arithmetic, the left side above without the term $2K\log(vD^2)$, divided by $K^3\log\eta$, is about $-0.17$ for the Pell
-numbers at $K=20$--$25$ and about $-0.21$ for $(P,Q)=(3,1)$, i.e.\ $\sum_nF_{2n}^{-3}$, at $K=20$; and for $Q=1$ the
-local bounds of Section~\ref{sec:den} agree with the exact multiplicities of the cyclotomic factors in $\QQ(\tau)[X]$
-for $K\le11$, with equality in most cases. The scripts are available from the author.
+arithmetic, the left side above without the term $2K\log(mD^2)$, divided by $K^3\log\eta$, is about $-0.12$ for the Pell
+numbers at $K=20$ and $K=25$ and about $-0.14$ for $(P,Q)=(3,1)$, i.e.\ $\sum_nF_{2n}^{-3}$, at $K=20$. With the true
+denominator, the norm of the ideal generated by the coefficients of $\Delta_K$, in place of $C_K(t)$, these numbers
+become about $-0.17$ and $-0.21$. For $Q=1$ the local bounds of Section~\ref{sec:den} agree with the exact multiplicities
+of the cyclotomic factors in $\QQ(\tau)[X]$ for $K\le13$, with equality in most cases. The scripts are available from the
+author.
 \end{remark}
 
 % ===========================================================================
@@ -503,7 +536,7 @@ for $K\le11$, with equality in most cases. The scripts are available from the au
 % ===========================================================================
 
 % TODO(owner): repository URL once public.
-The Lean development (library \lean{LucasU}, Lean~4.35.0, Mathlib v4.35.0) generalises the formalisation of
+The Lean development (library \lean{LucasU}, Lean~4.35.0, Mathlib v4.35.0, about 9200 lines) generalises the formalisation of
 \cite{Kri26} and proves
 \begin{center}
 \lean{theorem LucasU.irrational\_zetaU (hA : Admissible a E) : Irrational (zetaU a E)},
@@ -519,7 +552,8 @@ the value $0$, which is rational, the statement cannot hold for a degenerate rea
 shows that the series converges (to $D\sqrt D\,\Xi$). The corollaries are \lean{LucasU.irrational\_pell}, that the
 \lean{tsum} of $1/\cP_{n+1}^3$ over $n\ge0$ is irrational, with \lean{pell} $=$ \lean{Useq 2 1}, and
 \lean{LucasU.irrational\_fib\_mul}, that for $k\ge1$ the \lean{tsum} of $1/F_{k(n+1)}^3$ over $n\ge0$, written with
-\lean{Nat.fib}, is irrational; the identity $F_{kn}=F_kU_n(L_k,(-1)^k)$ is \lean{LucasU.fib\_mul\_eq}, with the
+\lean{Nat.fib}, is irrational; the identity $F_{kn}=F_kU_n(L_k,(-1)^k)$ is \lean{LucasU.fib\_mul\_eq}, stated as
+$F_{kn}=F_k\,U_n$ for \lean{Useq (lucasNum k) ((-1)\^{}(k+1))}, i.e.\ $(a,E)=(L_k,(-1)^{k+1})$, with the
 Lucas numbers \lean{lucasNum} (all in \lean{LucasU/Corollaries.lean} and \lean{LucasU/Final.lean}).
 
 \subsection*{Definitions and the chain}
@@ -553,7 +587,8 @@ Section~\ref{sec:proof} & & \lean{LucasU.irrational\_zetaU\_of}\\
 \lean{EntryIdentity} is used only inside the proof of \lean{DecayBound}, not by the assembly. The formal statements are
 the propositions in the form the assembly needs, with constants that may depend on $(\varepsilon,t)$: the uniformity
 in $(P,Q)$ claimed in Propositions~\ref{prop:decay}, \ref{prop:cost} and the explicit $M_K$ of
-Proposition~\ref{prop:conj} are not formalised and are not needed, since the theorem concerns one fixed $(P,Q)$.
+Proposition~\ref{prop:conj} are not expressed by the formal statements and are not needed, since the theorem
+concerns one fixed $(P,Q)$ (the formal proof of \lean{DecayBound} does give the uniform constant $C=4096$).
 \lean{DecayBound} is $|\Delta_K(\Xi)|\le C^{K^2}t^{2b_K}$ with $b_K=2\sum_{j<K}a_j$ (proved with $C=4096$),
 \lean{ConjBound} is $|\sigma\Delta_K(-\Xi)|\le C^{K^2}t^{K^2(K+1)}$, and \lean{CostBound} is
 $\log|C_K(t)C_K(\varepsilon/t)|\le\frac{121}{100}K^3\log t^{-1}+CK^2(1+\log K)^2$; its proof follows
