@@ -5,3 +5,5 @@ Some files are adapted from the Lean formalisation QZeta3 in
 https://github.com/uplift-universal-inc/qzeta_3-irrationality (directory lean/, Apache License 2.0,
 Lean formalisation by F. Solomon Admasu, v0.1.0, 2026-10-11). Each adapted file says so in its header and
 states what was changed.
+
+LucasU generalises lean_fibzeta (FibZeta); files adapted from it say so in their header.

@@ -6,8 +6,8 @@ standard axioms. The written proof is `C:\Users\Shawn Krisman\math\handoff\fibze
 version of `...\fibzeta\PROOF.md`; its referee report is `...\pell\REFEREE_U1.md`.
 
 **This generalises a finished project.** `C:\Users\Shawn Krisman\math\lean_fibzeta` (`FibZeta`, ≈ 8500 lines, complete,
-standard axioms) proves the Fibonacci case (a = 1, E = 1, i.e. ε = −1, t = 1/φ). A read-only copy of its sources is in
-`ref_fibzeta/FibZeta/` in your worktree. **Your job is to generalise your area's proved FibZeta files from the fixed
+standard axioms) proves the Fibonacci case (a = 1, E = 1, i.e. ε = −1, t = 1/φ). Read its sources (read-only) at
+`C:\Users\Shawn Krisman\math\lean_fibzeta\FibZeta\`; never edit anything in `lean_fibzeta`. **Your job is to generalise your area's proved FibZeta files from the fixed
 `tR = φ⁻¹`, `w = −τ²`, `ρ = −τ` to a sign `ε ∈ {±1}` (`w = ε τ²`, `ρ = ε τ`) and a real `t` with `0 < t ≤ φ⁻¹`.**
 Copy the files into your folder and edit them. Do not start from scratch.
 
@@ -60,7 +60,7 @@ Namespace `LucasU.<Area>`. If a frozen statement is false or not provable as sta
 ## Reuse of the uplift Lean (Apache-2.0)
 FibZeta already adapted `uplift-universal-inc/qzeta_3-irrationality` (clone at
 `C:\Users\Shawn Krisman\math\handoff\fibzeta\ref\qzeta_3-irrationality\lean\`). **Keep every attribution header**
-in files you copy from `ref_fibzeta`. A file you adapt from FibZeta starts with
+in files you copy from FibZeta. A file you adapt from FibZeta starts with
 `Generalised from lean_fibzeta FibZeta/<Area>/<File>.lean (ε = ±1, general t).` and keeps its uplift line if it had one.
 
 ## Where you work
