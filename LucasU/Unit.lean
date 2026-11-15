@@ -1,5 +1,7 @@
 import LucasU.Statements
 
+-- Generalised from lean_fibzeta FibZeta/Main.lean (the facts about t, φ and Binet, here for a general quadratic unit).
+
 /-!
 # The quadratic unit `α`, its inverse `t`, the conjugate `σt = ε/t`, Binet, and `√D ∉ ℚ`
 

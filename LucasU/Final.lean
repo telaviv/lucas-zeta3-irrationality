@@ -6,6 +6,8 @@ import LucasU.Conj.ConjBound
 import LucasU.Cost.CostBound
 import LucasU.Denom.Integrality
 
+-- Generalised from lean_fibzeta FibZeta/Final.lean (general (a, E); adds the Pell and F_{kn} corollaries).
+
 /-!
 # The theorem: `∑ 1/U_n³` is irrational for every Lucas sequence of a quadratic unit
 

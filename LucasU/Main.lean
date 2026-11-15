@@ -1,5 +1,7 @@
 import LucasU.Unit
 
+-- Generalised from lean_fibzeta FibZeta/Main.lean (sign ε, general quadratic unit; the generic lemmas `natDegree_Delta_le`, `pow_ne_one_of_abs_ne_one`, `aeval_CKpoly_ne_zero`, `bK_lower`, `eventually_log_sq_lt` are copied from it).
+
 /-!
 # Assembly (PROOF_U §6)
 
