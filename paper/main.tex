@@ -79,22 +79,24 @@ Theorem~\ref{thm:main} with $(P,Q)=(2,-1)$, and with $(P,Q)=(L_k,(-1)^k)$, which
 for $k\ge2$. Then $U_n=F_{kn}/F_k$ by Binet's formula, so $\sum_nF_{kn}^{-3}=F_k^{-3}\sum_nU_n^{-3}$.
 \end{proof}
 
-The case $(P,Q)=(1,-1)$, $\sum_nF_n^{-3}\notin\QQ$, is the main result of \cite{Kri26}; we refer there for the history
-of the Fibonacci zeta function. Briefly: Andr\'e-Jeannin proved that $\sum_nF_n^{-1}$ is irrational \cite{AJ89}, and
-Duverney, Ke.~Nishioka, Ku.~Nishioka and Shiokawa proved that the even powers $\sum_nU_n^{-2s}$ are transcendental for
-the generalised Fibonacci sequences with $Q=-1$, as are the odd-index sums $\sum_nU_{2n-1}^{-s}$ \cite{DNNS97}; the
-algebraic relations among such numbers were found by Elsner, Shimomura and Shiokawa \cite{ESS07,ESS08}. These sums are
-values of quasi-modular forms, to which Nesterenko's theorem \cite{Nes96} applies. The odd powers of the full sums are
-not of this kind (see \cite{Wal10}). For the Pell numbers, the tails of $\sum_n\cP_n^{-3}$ have been studied by Xu and
-Wang \cite{XW13}, who determined the integer part of their reciprocals; we know of no irrationality result for any
-sum $\sum_nU_n^{-3}$ before \cite{Kri26}.
+The case $(P,Q)=(1,-1)$, $\sum_nF_n^{-3}\notin\QQ$, is the main result of the preprint \cite{Kri26}; we refer there
+for the history of the Fibonacci zeta function. Briefly: Andr\'e-Jeannin proved that $\sum_nU_n^{-1}$ is irrational for a
+class of binary recurrences that includes every $U_n(P,\pm1)$, in particular $\sum_nF_n^{-1}\notin\QQ$ \cite{AJ89}. For
+both signs of $Q$, Duverney, Ke.~Nishioka, Ku.~Nishioka and Shiokawa proved that the even powers $\sum_nU_n^{-2s}$
+($s\ge1$) are transcendental, and for $Q=-1$ also the odd-index sums $\sum_nU_{2n-1}^{-s}$ \cite{DNNS97}; Elsner,
+Shimomura and Shiokawa determined the algebraic relations among such numbers \cite{ESS07,ESS08,ESS12}. These sums are
+values of quasi-modular forms at algebraic points, to which Nesterenko's theorem \cite{Nes96} applies (see
+\cite[\S3.4]{Wal10} for the Fibonacci zeta function). The odd powers $\sum_nU_n^{-(2s+1)}$ of the full sums are not
+known to be of this kind. For the Pell numbers, Xu and Wang \cite{XW13} evaluated the integer part of
+$\bigl(\sum_{k\ge n}\cP_k^{-3}\bigr)^{-1}$; we know of no irrationality result for any full sum $\sum_nU_n^{-3}$ before
+the preprint \cite{Kri26}.
 
 \subsection*{The method}
 Put $t=\eta^{-1}$ and $w=Qt^2$. Since $\bar\eta/\eta=Qt^2$, we have $U_n=t^{-n}(1-w^n)/\sqrt D$, and so
 \begin{equation}\label{eq:Xi}
 \Xi:=\frac1{D\sqrt D}\sum_{n\ge1}\frac1{U_n^3}=\sum_{N\ge1}\frac{t^{3N}}{(1-w^N)^3}.
 \end{equation}
-We follow \cite{Kri26}, which adapted to $\ZZ[\varphi]$ a construction of an unrefereed research draft on the $q$-zeta
+We follow \cite{Kri26}, which adapted to $\ZZ[\varphi]$ a construction of an unrefereed, AI-assisted research draft on the $q$-zeta
 value $\sum_nn^2/(p^n-1)$, $p\ge2$ an integer \cite{UPL,QZ3}; the construction is a moving-denominator Hankel
 determinant in the line of Uvarov \cite{Uva69}, Krattenthaler \cite{Kra21}, Pr\'evost \cite{Pre96} and Zudilin
 \cite{Zud16,Zud17}. A linear functional $L$, a second Euler derivative summed against the weights $(Qt)^n$ at the nodes
