@@ -1,0 +1,558 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+\setlength{\emergencystretch}{2em}
+
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\Nm}{\operatorname{N}}
+\newcommand{\eu}{\phi_{\mathrm E}}
+\newcommand{\Res}{\operatorname{res}}
+\newcommand{\lean}[1]{{\def\_{\textunderscore\allowbreak}\texttt{#1}}}
+
+\begin{document}
+
+\hypersetup{pdftitle={The reciprocal cube sums of Lucas sequences of quadratic units are irrational},pdfauthor={Shawn Krisman}}
+\title[Reciprocal cubes of Lucas sequences]{The reciprocal cube sums of Lucas sequences of quadratic units are
+irrational}
+
+\author{Shawn Krisman}
+
+\subjclass[2020]{Primary 11J72; Secondary 11B39, 33D15, 41A21, 68V20}
+\keywords{Lucas sequences, Pell numbers, Fibonacci numbers, irrationality, $q$-series, Hankel determinants, Lean}
+
+\begin{abstract}
+Let $\eta>1$ be a unit of a real quadratic order and $U_n=(\eta^n-\bar\eta^n)/(\eta-\bar\eta)$ its Lucas sequence. We
+prove that $\sum_{n\ge1}U_n^{-3}$ is irrational. Equivalently, $\sum_{n\ge1}U_n(P,Q)^{-3}\notin\QQ$ for the Lucas
+sequences with $Q=-1$, $P\ge1$, and with $Q=1$, $P\ge3$. In particular the sums of the reciprocal cubes of the Pell
+numbers and of the numbers $F_{kn}$, for every $k\ge1$, are irrational. The case of the Fibonacci numbers was treated in
+earlier work of the author; the proof here is the same Hankel-determinant construction, carried out for a general unit
+and for both signs of its norm. The constants of the argument do not depend on $\eta$ once they are measured in units
+of $\log\eta$. The whole argument is formalised in Lean~4 with Mathlib.
+\end{abstract}
+
+\maketitle
+
+% ===========================================================================
+\section{Introduction}
+% ===========================================================================
+
+For integers $P,Q$ let $U_n=U_n(P,Q)$ be the Lucas sequence $U_0=0$, $U_1=1$, $U_{n+1}=PU_n-QU_{n-1}$. When $Q=\pm1$
+and $D=P^2-4Q>0$ is not a square, $U_n=(\eta^n-\bar\eta^n)/\sqrt D$ with $\eta=(P+\sqrt D)/2$ a unit of the order
+$\ZZ[\eta]$ of norm $\eta\bar\eta=Q$. Conversely, every unit $\eta>1$ of a real quadratic order arises in this way, with
+$P=\eta+\bar\eta\ge1$ if $Q=-1$ and $P\ge3$ if $Q=1$. The Fibonacci numbers are $U_n(1,-1)$, the Pell numbers $\cP_n$ are
+$U_n(2,-1)$, and $F_{kn}/F_k=U_n(L_k,(-1)^k)$, where $L_k$ is the $k$-th Lucas number.
+
+\begin{theorem}\label{thm:main}
+Let $Q=-1$ and $P\ge1$, or $Q=1$ and $P\ge3$. Then $\displaystyle\sum_{n\ge1}\frac1{U_n(P,Q)^3}$ is irrational.
+\end{theorem}
+
+\begin{corollary}\label{cor:main}
+The numbers $\sum_{n\ge1}\cP_n^{-3}$ and, for every $k\ge1$, $\sum_{n\ge1}F_{kn}^{-3}$ are irrational.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:main} with $(P,Q)=(2,-1)$, and with $(P,Q)=(L_k,(-1)^k)$, which is admissible: $L_k\ge1$, and $L_k\ge3$
+for $k\ge2$. Then $U_n=F_{kn}/F_k$ by Binet's formula, so $\sum_nF_{kn}^{-3}=F_k^{-3}\sum_nU_n^{-3}$.
+\end{proof}
+
+The case $(P,Q)=(1,-1)$, $\sum_nF_n^{-3}\notin\QQ$, is the main result of \cite{Kri26}; we refer there for the history
+of the Fibonacci zeta function. Briefly: Andr\'e-Jeannin proved that $\sum_nF_n^{-1}$ is irrational \cite{AJ89}, and
+Duverney, Ke.~Nishioka, Ku.~Nishioka and Shiokawa proved that the even powers $\sum_nU_n^{-2s}$ are transcendental for
+the generalised Fibonacci sequences with $Q=-1$, as are the odd-index sums $\sum_nU_{2n-1}^{-s}$ \cite{DNNS97}; the
+algebraic relations among such numbers were found by Elsner, Shimomura and Shiokawa \cite{ESS07,ESS08}. These sums are
+values of quasi-modular forms, to which Nesterenko's theorem \cite{Nes96} applies. The odd powers of the full sums are
+not of this kind (see \cite{Wal10}). For the Pell numbers, the tails of $\sum_n\cP_n^{-3}$ have been studied by Xu and
+Wang \cite{XW13}, who determined the integer part of their reciprocals; we know of no irrationality result for any
+sum $\sum_nU_n^{-3}$ before \cite{Kri26}.
+
+\subsection*{The method}
+Put $t=\eta^{-1}$ and $w=Qt^2$. Since $\bar\eta/\eta=Qt^2$, we have $U_n=t^{-n}(1-w^n)/\sqrt D$, and so
+\begin{equation}\label{eq:Xi}
+\Xi:=\frac1{D\sqrt D}\sum_{n\ge1}\frac1{U_n^3}=\sum_{N\ge1}\frac{t^{3N}}{(1-w^N)^3}.
+\end{equation}
+We follow \cite{Kri26}, which adapted to $\ZZ[\varphi]$ a construction of an unrefereed research draft on the $q$-zeta
+value $\sum_nn^2/(p^n-1)$, $p\ge2$ an integer \cite{UPL,QZ3}; the construction is a moving-denominator Hankel
+determinant in the line of Uvarov \cite{Uva69}, Krattenthaler \cite{Kra21}, Pr\'evost \cite{Pre96} and Zudilin
+\cite{Zud16,Zud17}. A linear functional $L$, a second Euler derivative summed against the weights $(Qt)^n$ at the nodes
+$w^n$, has rational moments and pure simple-pole tails of $\Xi$. The Hankel determinants $\Delta_K(X)$ of $L$ against
+$D_K(s)=\prod_{a\le K}(1-w^as)$ satisfy $\Delta_K(\Xi)=\det[L(s^{i+j}/D_K)]$, and four estimates are combined:
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+ & size (per $K^3\log\eta$) & \\
+\midrule
+real decay $|\Delta_K(\Xi)|$ & $-2/9$ & Proposition~\ref{prop:decay}\\
+conjugate $|\sigma\Delta_K(-\Xi)|$ & $-1$ & Proposition~\ref{prop:conj}\\
+denominators $\log|\Nm C_K(t)|$ & $\le c_*=1.1954\ldots<11/9$ & Propositions~\ref{prop:global}, \ref{prop:cost}\\
+nonvanishing & infinitely many $K$ & Proposition~\ref{prop:nonvan}\\
+\bottomrule
+\end{tabular}
+\end{center}
+If $\sum_nU_n^{-3}$ were rational, $C_K(t)(vD^2)^K\Delta_K(\Xi)$ would be a nonzero element of $\ZZ[\eta]$ of norm $<1$
+for large $K$.
+
+Compared with \cite{Kri26} there are three changes. First, the sign: for $Q=1$ the nodes $w^n=t^{2n}$ are positive and the
+roots of unity at which the coefficients have poles are of a different type (Section~\ref{sec:den}); the local
+arguments are unchanged, and only the classification of the roots and the count of the $\alpha$-roots change. Second,
+the unit: all analytic estimates use only $0<t\le\varphi^{-1}$, which holds for every admissible $(P,Q)$, and every
+constant is a nondecreasing function of $t$ on that interval. Third, the order $\ZZ[\eta]$ need not be maximal; the
+argument uses only that the norm of a nonzero element of $\ZZ[\eta]$ is a nonzero rational integer. The present paper
+is self-contained.
+
+\subsection*{Formal verification}
+The theorem and every step of its proof are formalised in Lean~4 with Mathlib (Section~\ref{sec:lean}). The analytic
+ingredients are formalised for every real $t$ with $0<t\le\varphi^{-1}$ and both signs, and the integrality statement
+for an indeterminate parameter; only the final assembly uses that $t$ is the inverse of a quadratic unit.
+
+% ===========================================================================
+\section{The functional and the determinants}\label{sec:setup}
+% ===========================================================================
+
+\subsection*{Notation}
+Throughout, $(P,Q)$ is admissible: $Q=-1$ and $P\ge1$, or $Q=1$ and $P\ge3$. Put $D=P^2-4Q$, $\eta=(P+\sqrt D)/2$,
+$\bar\eta=(P-\sqrt D)/2=Q/\eta$, $t=\eta^{-1}$, $\cO=\ZZ[\eta]$, and let $\sigma$ be the nontrivial automorphism of
+$\QQ(\sqrt D)$, so $\sigma t=1/\bar\eta=Q\eta$. We write $\varphi=(1+\sqrt5)/2$, Euler's function $\eu(d)$ and the
+M\"obius function $\mu(d)$. Put
+\[
+\rho=Qt,\qquad w=Qt^2,\qquad \alpha_k=\rho w^k\ (k\ge0),\qquad
+\psi_N=\frac{t^{3N}}{(1-w^N)^3},\qquad S_a=\sum_{N=1}^a\psi_N,
+\]
+$A_K=K(K+1)/2$ and $\theta=s\,\frac{d}{ds}$. Then $\rho^2=Qw$, $|w|=t^2$, $\Xi=\sum_N\psi_N$, and $w/\rho=t$. We write
+$h_m$ for the complete homogeneous symmetric polynomial of degree $m$ ($h_m=0$ for $m<0$), and $K\ge2$.
+
+\begin{lemma}\label{lem:unit}
+\textup{(i)} $D$ is not a square, so $\sqrt D\notin\QQ$. \textup{(ii)} $\eta\ge\varphi$, so $0<t\le\varphi^{-1}$.
+\textup{(iii)} $t$ and $\sigma t$ are the roots of $\tau^2-PQ\tau+Q$, and $t\,\sigma t=Q$.
+\textup{(iv)} $\sqrt D=P-2Qt$ and $P-2Q\,\sigma t=-\sqrt D$.
+\textup{(v)} $U_n=(\eta^n-\bar\eta^n)/\sqrt D=t^{-n}(1-w^n)/\sqrt D$, so $1/U_n^3=D\sqrt D\,\psi_n$ and \eqref{eq:Xi}
+holds.
+\end{lemma}
+\begin{proof}
+(i) For $Q=-1$, $P^2<D<(P+2)^2$ and $D=(P+1)^2$ would give $2P=3$; for $Q=1$, $P\ge3$, $(P-2)^2<D<P^2$ and
+$D=(P-1)^2$ would give $2P=5$. (ii) $\sqrt D\ge\sqrt5$ in both cases, and $P\ge1$. (iii) From $\eta^2=P\eta-Q$ we get
+$1=Pt-Qt^2$, i.e.\ $t^2-PQt+Q=0$ (as $Q^2=1$); the other root is $Q/t=Q\eta=\sigma t$. (iv) $1/t=P-Qt$, so
+$\sqrt D=\eta-\bar\eta=1/t-Qt=P-2Qt$; and $P-2Q^2\eta=P-2\eta=-\sqrt D$. (v) Binet's formula, by induction from
+$\eta^2=P\eta-Q$ and $\bar\eta^2=P\bar\eta-Q$; then use $\eta^n=t^{-n}$, $\bar\eta^n=(Qt)^n=w^nt^{-n}$ and
+$\sqrt D^3=D\sqrt D$.
+\end{proof}
+
+\begin{definition}
+For $g$ analytic on a neighbourhood of $|s|\le t^2$ put
+$\displaystyle L(g)=\sum_{n\ge1}\rho^n\,[\theta(\theta+1)g](w^n)$.
+\end{definition}
+The series converges absolutely since $\theta(\theta+1)g=O(s)$ and $|\rho^nw^n|=t^{3n}$.
+
+\begin{lemma}\label{lem:moments}
+\textup{(i)} $L(s^k)=\nu_k:=k(k+1)\alpha_k/(1-\alpha_k)$ for $k\ge0$.
+\textup{(ii)} For $a\ge1$, $L\bigl(1/(1-w^as)\bigr)=\lambda_a(\Xi-S_a)$ with $\lambda_a=2\rho^{-a}$.
+\end{lemma}
+\begin{proof}
+(i) $\theta(\theta+1)s^k=k(k+1)s^k$; sum the geometric series. (ii) $\theta(\theta+1)(1-cs)^{-1}=2cs/(1-cs)^3$, so the
+left side is $\sum_n\rho^n\,2w^{a+n}/(1-w^{a+n})^3=2\rho^{-a}\sum_{N>a}\rho^Nw^N/(1-w^N)^3$, and
+$\rho^Nw^N=Q^{2N}t^{3N}=t^{3N}$.
+\end{proof}
+
+Let $D_K(s)=\prod_{a=1}^K(1-w^as)$, with poles $x_a=w^{-a}$, $|x_a|=\eta^{2a}$. For a polynomial $P_0$ of degree
+$<2K-1$,
+\[
+\frac{P_0}{D_K}=Q_0+\sum_{a=1}^K\frac{\Res_a(P_0)}{1-w^as},\qquad \Res_a(P_0)=\frac{P_0(x_a)}{\prod_{b\ne a}(1-w^{b-a})},
+\]
+with $Q_0$ a polynomial of degree $\le\deg P_0-K$. Let $L_X$ be the linear map with $L_X(s^k)=\nu_k$ and
+$L_X(1/(1-w^as))=\lambda_a(X-S_a)$, $X$ an indeterminate, and
+\[
+\Delta_K(X)=\det\bigl[L_X(s^{i+j}/D_K)\bigr]_{0\le i,j<K}\in\QQ(\sqrt D)[X],\qquad\deg\Delta_K\le K.
+\]
+By Lemma~\ref{lem:moments}, $\Delta_K(\Xi)=\det[L(s^{i+j}/D_K)]$.
+
+\subsection*{The formal parameter}
+Every quantity above is the value at $\tau=t$ of a rational function of an indeterminate $\tau$ with rational
+coefficients, which depends on $(P,Q)$ only through $Q$: $\rho=Q\tau$, $w=Q\tau^2$, $\alpha_k=Q^{k+1}\tau^{2k+1}$,
+$\psi_N=\tau^{3N}/(1-(Q\tau^2)^N)^3$. Write $\Delta_{K,\tau}(X)\in\QQ(\tau)[X]$ for the resulting polynomial, and
+$w(\zeta)$, $\alpha_k(\zeta)$ for the values at $\tau=\zeta$. For $Q=-1$ it is the polynomial of \cite{Kri26}. Since
+$\sigma t=Q/t$, the coefficientwise conjugate $\sigma\Delta_K$ is the value of $\Delta_{K,\tau}$ at $\tau=Q/t$. Both
+values are defined because no denominator vanishes at a real number that is neither $0$ nor a root of unity.
+
+% ===========================================================================
+\section{Real decay}\label{sec:decay}
+% ===========================================================================
+
+\begin{proposition}\label{prop:decay}
+$\log|\Delta_K(\Xi)|\le-\tfrac29(K^3+3K^2-4)\log\eta+O(K^2)$, with an absolute implied constant.
+\end{proposition}
+\begin{proof}
+Let $V_j(s)=\prod_{u=1}^j(s-w^{\lceil u/3\rceil})$, $R_j=\lceil j/3\rceil$ and $a_j=\sum_{u\le j}\lceil u/3\rceil$.
+The change of basis from $1,s,\dots,s^{K-1}$ to $V_0,\dots,V_{K-1}$ is unitriangular, so
+$\Delta_K(\Xi)=\det[L(V_iV_j/D_K)]$.
+
+Since $\theta(\theta+1)g(s_0)$ depends only on the $2$-jet of $g$ at $s_0$, the $m$-th term of $L(V_iV_jW)$,
+$W=1/D_K$, vanishes for $m<R:=\max(R_i,R_j)$: then $V_iV_j$ has a triple zero at $w^m$. For $m\ge R$ and $s=w^m$ every
+root $\beta$ of $V_j$ satisfies $|s|\le|\beta|$, so $|s-\beta|\le2|\beta|$ and $\theta(s-\beta)=s$; the signs of the
+nodes play no role. Hence $|V_j(s)|\le2^j|w|^{a_j}$ and $|\theta^uV_j(s)|\le j^u2^j|w|^{a_j}|s|/|w|^{R_j}$ for $u=1,2$.
+On $|s|\le t^2$ we have $|w^as|\le t^{2a+2}\le\varphi^{-2a-2}$, so $|W|$, $|\theta W|/|s|$ and $|\theta^2W|/|s|$ are
+bounded by an absolute constant. Since $\theta(\theta+1)=\theta^2+\theta$ kills constants, by Leibniz every term of
+$\theta(\theta+1)(V_iV_jW)$ contains at least one $\theta$ on some factor, hence a factor $\le|s|/|w|^R$. With
+$|\rho|^m\le1$ and $\sum_{m\ge R}|w|^{m-R}\le(1-\varphi^{-2})^{-1}$,
+\[
+|L(V_iV_jW)|\le c_1(i+j+1)^24^{i+j}|w|^{a_i+a_j}
+\]
+for an absolute constant $c_1$. Pull $|w|^{a_i}$ out of row $i$ and column $i$ and apply Hadamard's inequality:
+$|\Delta_K(\Xi)|\le|w|^{2\sum_{j<K}a_j}(c_1(2K)^24^{2K}\sqrt K)^K$. Finally
+$2\sum_{j<K}a_j=(K^3+3K^2-\iota_K)/9$ with $\iota_K\in\{0,4,2\}$ according to $K\bmod3$, and $|w|=\eta^{-2}$.
+\end{proof}
+
+% ===========================================================================
+\section{Denominators}\label{sec:den}
+% ===========================================================================
+
+\subsection{The integrality ring and the root types}
+
+\begin{lemma}\label{lem:ring}
+The coefficients of $\Delta_{K,\tau}(X)$ lie in $\ZZ[\tau,\tau^{-1},\Phi_d(\tau)^{-1}:d\in\cD_K]$, where $\cD_K$ is
+the set of orders of roots of unity $\zeta$ such that
+\textup{(W)} $w(\zeta)=Q\zeta^2$ has order $e\le K$, or \textup{($\alpha$)} $\alpha_k(\zeta)=1$ for some $1\le k\le K-2$.
+\end{lemma}
+\begin{proof}
+The inputs are the Laurent monomials $w^a$ and $\lambda_a=2Q^a\tau^{-a}$; the factors $1/(1-w^{b-a})$ and
+$(1-w^N)^{-3}$ ($N\le K$), where $1-w^n=1-Q^n\tau^{2n}$ is $\pm$ a product of cyclotomic polynomials $\Phi_d(\tau)$ with
+$w(\zeta)^n=1$; and $\nu_k=k(k+1)\alpha_k/(1-\alpha_k)$, of which only $k\le K-2$ occur (the quotient has degree
+$\le 2K-2-K$), with $1-\alpha_k=1-Q^{k+1}\tau^{2k+1}=\pm\prod\Phi_d(\tau)$. Division by $D_K$ is integral because its
+leading coefficient $\prod_a(-w^a)=\pm\tau^{K(K+1)}$ is a unit. No rational constant is inverted.
+\end{proof}
+
+For $d\in\cD_K$ the type depends only on $d$: every primitive $d$-th root is a power $\zeta^j$ with $j$ coprime to $2d$,
+and since $Q^j=Q$, $Q\zeta^{2j}=(Q\zeta^2)^j$ and $\alpha_k(\zeta^j)=\alpha_k(\zeta)^j$; powers coprime to the order
+preserve the order. If $\zeta$ has order $d$, the order $e(d)$ of $w(\zeta)$ and the least $k\ge1$ with
+$\alpha_k(\zeta)=1$ are as follows.
+\begin{itemize}
+\item[$Q=-1$:] $e(d)=2d$ ($d$ odd), $d$ ($d\equiv2\bmod4$), $d/4$ ($d\equiv4\bmod8$), $d/2$ ($d\equiv0\bmod8$);
+$k_{\min}(d)=(d-1)/2$ ($d\equiv3\bmod4$), $(3d-1)/2$ ($d\equiv1\bmod4$), $(d-2)/4$ ($d\equiv2\bmod8$, $d\ge10$),
+$(3d-2)/4$ ($d\equiv6\bmod8$), $k_{\min}(2)=2$, and none if $4\mid d$.
+\item[$Q=1$:] $e(d)=d$ ($d$ odd), $d/2$ ($d$ even); $\alpha_k(\zeta)=\zeta^{2k+1}=1$ forces $d$ odd, and then
+$k_{\min}(d)=(d-1)/2$ for $d\ge3$, $k_{\min}(1)=1$.
+\end{itemize}
+In both cases $\sum_{e(d)=e}\eu(d)=2\eu(e)$: for each primitive $e$-th root $\omega$ the equation $Q\tau^2=\omega$ has two
+roots, and these $2\eu(e)$ roots of unity are exactly those with $e(\tau)=e$. All $d\in\cD_K$ satisfy $d\le4K$:
+$w(\zeta)^e=1$ gives $\zeta^{4e}=1$, and $\alpha_k(\zeta)=1$ gives $\zeta^{4k+2}=1$.
+
+\emph{Local setting.} Fix $\zeta$ of order $d\in\cD_K$, let $\varpi=\tau-\zeta$ and let $v=\operatorname{ord}_\varpi$ on
+$\QQ(\zeta)((\varpi))$, extended to polynomials in $X$ as the Gauss valuation (the minimum over the coefficients; it is
+multiplicative). Then:
+\begin{itemize}
+\item[(a)] if $e(d)=e\le K$, then $x_a(\zeta)=x_b(\zeta)$ iff $e\mid a-b$, and then $v(x_a-x_b)=1$: indeed
+$x_a-x_b=x_a(1-w^{b-a})$, and $1-w^n$ has only simple zeros, since $\frac{d}{d\tau}w^n\ne0$ at $\tau\ne0$;
+\item[(b)] $\psi_N$ has a pole of order exactly $3$ if $e\mid N$ and is regular otherwise, by (a); so $S_a$ has a pole of
+order $\le3$, and is regular if $a<e$;
+\item[(c)] $1-\alpha_k=1-Q^{k+1}\tau^{2k+1}$ is separable, so it has at most a simple zero at $\zeta$;
+\item[(d)] $\lambda_a$ and $x_a$ are Laurent monomials, hence units.
+\end{itemize}
+
+\subsection{Local bounds}
+
+Put $c(m)=2\sum_{j=0}^{m-2}\max(0,\tfrac{m+2}2-j)$ and $c'(m)=2\sum_{j=0}^{m-1}\max(0,\tfrac{m+2}2-j)$; thus
+$c(1)=0$, $c(m)=4(m-1)$ for $m\le6$, $c(m)\le(m+3)^2/4$, $c'(1)=3$ and $0\le c'-c\le3$.
+
+\begin{proposition}\label{prop:W}
+Let $e=e(d)\le K$ and partition $\{1,\dots,K\}$ into the clusters $I_r=\{a\equiv r\bmod e\}$ of sizes $m_r$,
+$1\le r\le e$. Then
+\[
+-v(\Delta_{K,\tau})\le\sum_{r=1}^{e-1}c(m_r)+c'(m_e)+\epsilon\max(0,K-1-k_{\min}(d)),
+\]
+with $\epsilon=1$ if $\zeta$ is also an $\alpha$-root and $\epsilon=0$ otherwise.
+\end{proposition}
+\begin{proof}
+The proof of \cite[Proposition~4.2]{Kri26} uses only the facts (a)--(d) and the integrality of the quotient by $D_K$,
+which hold for both signs; we repeat it. Let $F(s)=\prod_a(s-x_a)$ and $F_r=\prod_{a\in I_r}(s-x_a)$. Fix a cluster
+$r$, write $m=m_r$ and $I_r=\{a_1<\dots<a_m\}$.
+
+\emph{Newton cluster basis.} For $0\le j<m$ put $N_{r,j}=(F/F_r)\prod_{l=m-j+1}^m(s-x_{a_l})$; it vanishes at the top
+$j$ nodes of the cluster. At $\varpi=0$ these reduce to $(F/F_r)(s-y_r)^j\cdot$(unit), $y_r=x_r(\zeta)$, which form a
+basis of the polynomials of degree $<K$ by the Chinese remainder theorem (distinct residues $r$ give distinct points
+$y_r$). So the change of basis from $1,\dots,s^{K-1}$ has unit determinant, and $v(\Delta_{K,\tau})$ is the valuation of
+$G=[L_X(NN'/D_K)]$ in this basis.
+
+\emph{Entries.} $G_{(r,j),(r',k)}=P^{\mathrm{pol}}+\sum_a\Res_a(NN')\lambda_a(X-S_a)$, where $P^{\mathrm{pol}}$ is $L_X$ of
+the polynomial part. (i) If $r\ne r'$ then $F\mid N_{r,j}N_{r',k}$ and all $\Res_a=0$. (ii) If $r=r'$, then
+$\Res_{a_i}=0$ unless $i\le m-\max(j,k)$, and for such $i$
+\[
+\Res_{a_i}=\frac{(F/F_r)(x_{a_i})^2\prod_{l>m-j}(x_{a_i}-x_{a_l})\prod_{l>m-k}(x_{a_i}-x_{a_l})}
+{\prod_{b\ne a_i}(1-w^{b-a_i})}.
+\]
+Here $(F/F_r)(x_{a_i})$ is a unit, each displayed difference has valuation exactly $1$ by (a), and the denominator has
+valuation exactly $m-1$. So $v(\Res_{a_i})=j+k-(m-1)$. (iii) $v(\lambda_a)=0$, and by (b) the Gauss valuation of
+$X-S_a$ is $\ge-3$ if $a\ge e$ and $\ge0$ if $a<e$. (iv) For $r<e$ the node $a_1=r$ is regular and $a_i$ is singular
+for $i\ge2$; for $r=e$ every node is singular. So the proper part of the $(j,k)$ entry has $v\ge j+k-(m-1)-3$ if some
+singular node has $i\le m-\max(j,k)$, and $v\ge j+k-(m-1)$ otherwise. The second case occurs exactly when $r<e$ and
+$\max(j,k)=m-1$.
+
+\emph{Weights.} Let $\kappa_j=\max(0,\tfrac{m+2}2-j)$ for $j\le m-2$ and $\kappa_{m-1}=0$ if $r<e$, and
+$\kappa_j=\max(0,\tfrac{m+2}2-j)$ for all $j<m$ if $r=e$. Then (A) if the $(j,k)$ entry has a singular node,
+$\kappa_j+\kappa_k\ge m+2-j-k$, and (B) if $r<e$ and $\max(j,k)=m-1$, $\kappa_j+\kappa_k\ge0\ge m-1-j-k$. Indeed, in
+case (A) if both weights are positive the inequality is an equality; if $\kappa_k=0$, then $k\ge\frac{m+2}2$, so
+$\kappa_j\ge\frac{m+2}2-j\ge m+2-j-k$; if both vanish, the right side is $\le0$. Case (B) holds because $j+k\ge m-1$.
+Scale row $(r,j)$ by $\varpi^{\lceil\kappa_j\rceil}$ and column $(r,j)$ by $\varpi^{\lfloor\kappa_j\rfloor}$. Since
+$a+b\ge n\in\ZZ$ implies $\lceil a\rceil+\lfloor b\rfloor\ge n$, every scaled proper entry is integral, and the total
+scaling is $2\sum\kappa_j$, which is $c(m)$ for $r<e$ and $c'(m)$ for $r=e$. All exponents are $\ge0$.
+
+\emph{Polynomial part.} The quotient of $NN'$ by $D_K$ has degree $\le K-2$ and coefficients in $\ZZ[\tau^{\pm1}]$, so
+$P^{\mathrm{pol}}=\sum_{k\le K-2}(\text{coeff})\nu_k$. At a pure W-root every $\nu_k$, $k\le K-2$, is regular, so the
+scaled matrix is integral; this gives the bound with $\epsilon=0$. At an $\alpha$-root, put
+$P_\alpha=\{k\le K-2:\alpha_k(\zeta)=1\}$ and write $\nu_k=\varpi^{-1}u_k$ with $u_k$ regular for $k\in P_\alpha$, by
+(c). Split $P^{\mathrm{pol}}=A^{\mathrm{pol}}+\varpi^{-1}B$ with $B(f,g)=\sum_{k\in P_\alpha}u_k(0)\,[s^k](fg/D_K)_+$
+and $A^{\mathrm{pol}}$ regular. If $\deg f\le k_{\min}$, the quotient of $fg$ has degree $<k_{\min}$, so $B(f,\cdot)=0$
+and $\operatorname{rank}B\le\max(0,K-1-k_{\min})$. After scaling the matrix is $A+\varpi^{-1}B'$ with $A$ integral and
+$\operatorname{rank}B'=\operatorname{rank}B$; expanding the determinant multilinearly in the columns, a term taking more
+than $\operatorname{rank}B$ columns from $\varpi^{-1}B'$ vanishes, and every other term has valuation
+$\ge-\max(0,K-1-k_{\min})$.
+\end{proof}
+
+\begin{lemma}\label{lem:alpha}
+If $e(d)>K$ and $\zeta$ is an $\alpha$-root, then $-v(\Delta_{K,\tau})\le\max(0,K-1-k_{\min}(d))$.
+\end{lemma}
+\begin{proof}
+In the monomial basis all $\Res_a$, $\lambda_a$ and $S_a$ ($a\le K<e$) are regular at $\zeta$ by (a)--(d); only the
+$\nu_k$, $k\in P_\alpha$, carry poles, and the rank argument of Proposition~\ref{prop:W} applies with no scaling.
+\end{proof}
+
+\begin{proposition}\label{prop:global}
+Let $b_{K,d}$ be the bound of Proposition~\ref{prop:W} or Lemma~\ref{lem:alpha} \textup{(}$0$ if $d\notin\cD_K$\textup{)}
+and $C_K(\tau)=\prod_d\Phi_d(\tau)^{b_{K,d}}$. Then $C_K(\tau)\Delta_{K,\tau}(X)\in\ZZ[\tau^{\pm1}][X]$; hence
+$C_K(t)\Delta_K(X)\in\cO[X]$, and $C_K(\sigma t)\sigma\Delta_K(X)\in\cO[X]$ is its conjugate.
+\end{proposition}
+\begin{proof}
+By Lemma~\ref{lem:ring} a coefficient is $P_1/(\tau^n\prod\Phi_d^{n_d})$ with $P_1\in\ZZ[\tau]$. The bound
+$v_\zeta\ge-b_{K,d}$ at every primitive $d$-th root forces $\Phi_d^{n_d-b_{K,d}}\mid P_1$ in $\QQ[\tau]$, hence in
+$\ZZ[\tau]$ since $\Phi_d$ is monic. Specialise $\tau\mapsto t$, a unit of $\cO$ ($t=Q\bar\eta=Q(P-\eta)$), and
+$\tau\mapsto\sigma t$.
+\end{proof}
+
+\subsection{\texorpdfstring{The size of $C_K(t)$}{The size of C\_K(t)}}
+
+\begin{lemma}\label{lem:phid}
+For $d\ge1$, $\bigl|\log|\Phi_d(t)\Phi_d(\sigma t)|-\eu(d)\log\eta\bigr|\le2\mathcal E_1$, where
+$\mathcal E_1=\sum_{a\ge1}|\log(1-\varphi^{-a})|=2.1136\ldots$.
+\end{lemma}
+\begin{proof}
+$\Phi_d(x)=\prod_{a\mid d}(x^a-1)^{\mu(d/a)}$ and $\sum_{a\mid d}\mu(d/a)a=\eu(d)$. For $|x|=\eta$ write
+$x^a-1=x^a(1-x^{-a})$ and use $|\log|1-x^{-a}||\le|\log(1-\eta^{-a})|\le|\log(1-\varphi^{-a})|$; for $x=t$ use
+$|1-t^a|$ in the same way.
+\end{proof}
+
+Let $\beta_7=\prod_{p\le7}(1-p^{-2})=\frac{768}{1225}$ and $c_*=\frac{11}8\beta_7+\frac13=\frac{4393}{3675}=1.19537\ldots$.
+
+\begin{proposition}\label{prop:cost}
+$\log|\Nm C_K(t)|\le c_*K^3\log\eta+O(K^2\log K)$, with an implied constant independent of $(P,Q)$.
+\end{proposition}
+\begin{proof}
+By Lemma~\ref{lem:phid}, $\log|\Nm C_K(t)|\le\log\eta\sum_db_{K,d}\eu(d)+2\mathcal E_1\sum_db_{K,d}$, and
+$\sum_db_{K,d}=O(K^2\log K)$. Split $b_{K,d}$ into its W part and its $\alpha$ part.
+
+\emph{W part.} This part depends only on the cluster sizes and on $\sum_{e(d)=e}\eu(d)=2\eu(e)$, which are the same for
+both signs; so the estimate of \cite[Proposition~4.6]{Kri26} applies verbatim. Since $m_r\ge1$, $\sum_rm_r=K$,
+$m_r<K/e+1$ and $c(m)=4(m-1)+\delta(m)$ with $0\le\delta(m)\le\max(0,m-5)^2/4$,
+\[
+\sum_{r<e}c(m_r)+c'(m_e)\le4(K-e)+\frac{\max(0,K-4e)^2}{4e}+3.
+\]
+Bound $\eu(e)\le e\,g_7(e)$ with $g_7(e)=\prod_{p\le7,\,p\mid e}(1-1/p)$, a function of period $210$ with
+$0\le g_7\le1$ and mean $\beta_7$. If $g_7$ has period $P_0$, $0\le g_7\le1$ and mean $\beta$, and $f$ is a function
+on $[0,K]$ with $|f|\le M$ and total variation $V$, then
+$\bigl|\sum_{1\le e\le K}g_7(e)f(e)-\beta\int_0^Kf(y)\,dy\bigr|\le2P_0(M+V)$. With
+$f_K(y)=8y(K-y)+\tfrac12\max(0,K-4y)^2+6y$ the W part is at most
+$\beta_7\int_0^Kf_K+O(K^2)=\tfrac{11}8\beta_7K^3+O(K^2)$.
+
+\emph{$\alpha$ part.} $\max(0,K-1-k_{\min})$ counts the $k\in[k_{\min},K-2]$, so
+\[
+\sum_d\max(0,K-1-k_{\min}(d))\,\eu(d)\le\sum_{k=1}^{K-2}\sum_{j=1}^k\#\{\zeta:\alpha_j(\zeta)=1\}
+=\sum_{k=1}^{K-2}(k^2+2k)\le\tfrac13K^3+O(K^2),
+\]
+since $\alpha_j(\zeta)=1$ means $\zeta^{2j+1}=Q^{j+1}$, which has $2j+1$ solutions, for either sign.
+\end{proof}
+
+\begin{remark}\label{rem:sharp}
+The following is a sketch and is not used in the proof. Using $\sum_{n\le y}\eu(n)=3y^2/\pi^2+O(y\log y)$ in residue
+classes and the exact $k_{\min}$, the same bound holds with $c_*$ replaced by $(12I+80/27)/\pi^2\le1.130790$ if $Q=-1$
+and by $(12I+8/3)/\pi^2\le1.100769$ if $Q=1$. Here $I=\int_0^1\ell(x)x\,dx\in[0.6822834,0.6831236]$, $\ell$ is the
+piecewise linear function with $\ell(1/m)=c(m)/m$, and $8/(3\pi^2)$ is the contribution of the odd $d$ with
+$k_{\min}=(d-1)/2$.
+\end{remark}
+
+% ===========================================================================
+\section{Smallness at the conjugate}\label{sec:conj}
+% ===========================================================================
+
+\begin{proposition}\label{prop:conj}
+$\log|\sigma\Delta_K(-\Xi)|\le-K^2(K+1)\log\eta+K\log(\sqrt K\,M_K)$, where
+$M_K=C_0\bigl(K^2/((1-\varphi^{-3})(1-\varphi^{-2}))+\varphi^2\bigr)$ and
+$C_0=\prod_{i\ge1}(1-\varphi^{-2i})^{-1}=2.0770906\ldots$.
+\end{proposition}
+\begin{proof}
+At $\tau=\sigma t=Q/t$ the data become: $w\mapsto w^{-1}$, $\lambda_a\mapsto2(\sigma\rho)^{-a}=2t^a$ (as
+$\sigma\rho=Q\sigma t=\eta$), $S_a\mapsto-S_a$ (as $\sigma\psi_N=-\psi_N$: $U_N$ is rational and $\sigma\sqrt D=-\sqrt D$),
+and $\nu_k\mapsto\sigma\nu_k=Qk(k+1)/(\alpha_k-Q)$ (as $\sigma\alpha_k=Q/\alpha_k$). Let $L^\sigma_X$ be the
+corresponding formal functional. The conjugate poles are $r_a=w^a$, $|r_a|=t^{2a}$, and
+$\sigma D_K(s)=\prod_a(1-w^{-a}s)=(-1)^Kw^{-A_K}F^\sigma(s)$ with $F^\sigma(s)=\prod_a(s-r_a)$. Hence
+\[
+\sigma\Delta_K(X)=(-1)^{K^2}w^{A_KK}\det[Y_{i+j}(X)],\qquad Y_k(X)=L^\sigma_X(s^k/F^\sigma).
+\]
+
+\emph{The pole moments at $X=-\Xi$.} Since $1/(1-w^{-a}s)=-r_a/(s-r_a)$, $L^\sigma_X(1/(s-r_a))=-r_a^{-1}2t^a(X+S_a)$,
+and at $X=-\Xi$ this is $2t^ar_a^{-1}\sum_{N>a}\psi_N=\Gamma(r_a)$, using $t^{4a}=w^{2a}=r_a^2$ (for both signs) and
+$w^{a+M}=r_aw^M$, where
+\[
+\Gamma(r)=2r\sum_{M\ge1}\frac{t^{3M}}{(1-rw^M)^3}=\sum_{n\ge1}\gamma_nr^n,\qquad
+|\gamma_n|\le\frac{n(n+1)t^{2n+1}}{1-t^3}.
+\]
+Partial fractions and $\sum_ar_a^m/(F^\sigma)'(r_a)=h_{m-K+1}(r)$ give
+\[
+Y_k(-\Xi)=\sum_{j=0}^{k-K}h_{k-K-j}(r)\,\sigma\nu_j+\sum_{n\ge1}\gamma_nh_{k+n-K+1}(r).
+\]
+
+\emph{Bounds.} As $h_m(r_1,\dots,r_K)=w^mh_m(1,w,\dots,w^{K-1})$, $|h_m(r)|\le C_0t^{2m}$, using
+$\prod_{i\ge1}(1-t^{2i})^{-1}\le C_0$ for $t\le\varphi^{-1}$. For $j\ge1$, $|\sigma\nu_j|\le j(j+1)/(1-t^3)$, so the first
+sum is at most $C_0K^2/((1-t^3)(1-t^2))$. For the second,
+$\sum_nn(n+1)t^{2n+1}=2t^3/(1-t^2)^3\le2$ and $1/(1-t^3)\le\varphi^2/2$ for $t\le\varphi^{-1}$, so
+$\sum_n|\gamma_n|\le\varphi^2$. All these quantities increase with $t$, so $|Y_k(-\Xi)|\le M_K$ for $0\le k\le2K-2$.
+Hadamard's inequality and $|w|^{A_KK}=\eta^{-K^2(K+1)}$ finish the proof.
+\end{proof}
+
+% ===========================================================================
+\section{Nonvanishing}\label{sec:nonvan}
+% ===========================================================================
+
+\begin{proposition}\label{prop:nonvan}
+$\Delta_K(\Xi)\ne0$ for infinitely many $K$.
+\end{proposition}
+\begin{proof}
+The proof of \cite[Proposition~6.1]{Kri26} uses only $0<|w|<1$, $\rho\ne0$ and the distinctness of the nodes; we repeat
+it. Let $\cC(z)=L(1/(z-s))=\sum_n\rho^n\,2w^nz/(z-w^n)^3$ for $|z|>t^2$. It continues to $\CC\setminus\{0\}$ with a pole
+of order exactly $3$ at each $w^n$ (leading coefficient $2\rho^nw^{2n}\ne0$), so it is not rational; it is analytic at
+$\infty$ and $O(1/z)$. For $\deg Q_1\le n-1$ put $H_{n,Q_1}(z)=L\bigl(Q_1(s)/((z-s)D_n(s))\bigr)$, analytic for $|z|>t^2$
+and in particular at every $x_a$, and
+\[
+T_{n,Q_1}(z)=L\Bigl(\frac{Q_1(z)D_n(s)-D_n(z)Q_1(s)}{(z-s)D_n(s)}\Bigr),
+\]
+a polynomial in $z$ of degree $\le n-1$. Then $\cC Q_1-T_{n,Q_1}=D_nH_{n,Q_1}$.
+
+If $\Delta_n(\Xi)=0$, any kernel vector gives $Q_n\ne0$ of degree $\le n-1$ with $L(s^jQ_n/D_n)=0$ for $j<n$. Put
+$T_n=T_{n,Q_n}$ and $E_n=\cC Q_n-T_n$. Expanding $(z-s)^{-1}=\sum_js^jz^{-j-1}$, uniformly with two $s$-derivatives on
+$|s|\le t^2$ for $|z|>t^2+\varepsilon$, gives $H_{n,Q_n}(z)=O(z^{-n-1})$, so $E_n=O(z^{-1})$ and $E_n(x_a)=0$ for $a\le n$.
+If $\Delta_n(\Xi)=\Delta_{n+1}(\Xi)=0$, then $V=T_{n+1}Q_n-T_nQ_{n+1}=Q_{n+1}E_n-Q_nE_{n+1}$ is a polynomial,
+$O(z^{n-1})$, vanishing at $x_1,\dots,x_n$; so $V=0$ and $T_n/Q_n=T_{n+1}/Q_{n+1}$. If $\Delta_n(\Xi)=0$ for all $n\ge N$,
+all $T_n/Q_n$ equal one reduced fraction $T/Q_2$, so $Q_n=U'_nQ_2$, $T_n=U'_nT$, and $E:=\cC Q_2-T\ne0$. Then
+$U'_nE=E_n=O(1/z)$ forces $E=c_0z^{-q}(1+o(1))$ with $c_0\ne0$, $q\ge1$, and $\deg U'_n\le q-1$; but $E(x_a)\ne0$ for all
+large $a$ while $E_n(x_a)=0$, so $U'_n(x_a)=0$ for all large $a\le n$, too many zeros once $n$ is large.
+\end{proof}
+
+% ===========================================================================
+\section{\texorpdfstring{Proof of Theorem~\ref{thm:main}}{Proof of the theorem}}\label{sec:proof}
+% ===========================================================================
+
+Suppose $\sum_nU_n^{-3}=u/v$ with $u\in\ZZ$, $v\in\ZZ_{>0}$. By \eqref{eq:Xi} and Lemma~\ref{lem:unit}(iv),
+$\Xi=u\sqrt D/(vD^2)=u(P-2Qt)/(vD^2)$ and $\sigma\Xi=-\Xi$. For $K$ in the infinite set of Proposition~\ref{prop:nonvan}
+put $y_K=C_K(t)(vD^2)^K\Delta_K(\Xi)$. By Proposition~\ref{prop:global}, $y_K\in\cO$, and $y_K\ne0$ because
+$\Delta_K(\Xi)\ne0$ and $C_K(t)\ne0$ ($t$ is not a root of unity). Moreover
+$\sigma y_K=C_K(\sigma t)(vD^2)^K\sigma\Delta_K(-\Xi)$. The norm $y_K\,\sigma y_K$ of the nonzero algebraic integer $y_K$
+is a nonzero rational integer, so $|y_K\,\sigma y_K|\ge1$, and by Propositions~\ref{prop:decay}, \ref{prop:conj} and
+\ref{prop:cost}
+\begin{multline*}
+0\le\log|\Nm C_K(t)|+2K\log(vD^2)+\log|\Delta_K(\Xi)|+\log|\sigma\Delta_K(-\Xi)|\\
+\le\bigl(c_*-\tfrac29-1\bigr)K^3\log\eta+O(K^2\log K).
+\end{multline*}
+Since $c_*-\tfrac{11}9=\tfrac{11}8\beta_7-\tfrac89=-0.02684\ldots<0$, this fails for large $K$. \qed
+
+\begin{remark}
+Not used in the proof. With the constants of Remark~\ref{rem:sharp} the margin is at least $0.0914$ ($Q=-1$) and
+$0.1214$ ($Q=1$) per $K^3\log\eta$. At finite $K$, computed with exact determinants over $\QQ(\sqrt D)$ and interval
+arithmetic, the left side above without the term $2K\log(vD^2)$, divided by $K^3\log\eta$, is about $-0.17$ for the Pell
+numbers at $K=20$--$25$ and about $-0.21$ for $(P,Q)=(3,1)$, i.e.\ $\sum_nF_{2n}^{-3}$, at $K=20$; and for $Q=1$ the
+local bounds of Section~\ref{sec:den} agree with the exact multiplicities of the cyclotomic factors in $\QQ(\tau)[X]$
+for $K\le11$, with equality in most cases. The scripts are available from the author.
+\end{remark}
+
+% ===========================================================================
+\section{Formal verification}\label{sec:lean}
+% ===========================================================================
+
+% TODO(owner): repository URL once public.
+The Lean development (library \lean{LucasU}, Lean~4.35.0, Mathlib v4.35.0) generalises the formalisation of
+\cite{Kri26} and proves
+\begin{center}
+\lean{theorem LucasU.irrational\_zetaU (hA : Admissible a E) : Irrational (zetaU a E)},
+\end{center}
+where \lean{Admissible a E} means $E=1$, $a\ge1$ or $E=-1$, $a\ge3$, and \lean{zetaU a E} is the series
+$\sum_{n\ge0}1/U_{n+1}^3$ for the sequence \lean{Useq a E} with $U_{n+2}=aU_{n+1}+EU_n$, written with a \lean{tsum}; so
+$(a,E)=(P,-Q)$. The proof uses only the axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}; there is no
+\lean{sorry}, no \lean{native\_decide} and no added axiom.
+
+\emph{What has to be trusted.} For the theorem itself, only the definitions of \lean{Useq}, \lean{zetaU} and
+\lean{Admissible} (and Mathlib's \lean{tsum} and \lean{Irrational}) have to be read. Since a divergent \lean{tsum} has
+the value $0$, which is rational, the statement cannot hold for a degenerate reason; a separate lemma also shows that
+the series converges.
+
+\subsection*{Definitions and the chain}
+\lean{LucasU/Defs.lean} defines the construction of Section~\ref{sec:setup} over an arbitrary field with a sign
+$\varepsilon=Q$ and a parameter $\tau$ (\lean{wpar} $=\varepsilon\tau^2$, \lean{alpha}, \lean{nu}, \lean{psi}, \lean{S},
+\lean{node}, \lean{F}, \lean{res}, \lean{mConst}, \lean{mLin}, \lean{nrm}, \lean{Delta}), the real functional \lean{Lfun}
+and \lean{XiR} as functions of $(\varepsilon,t)$, and the clearing polynomial \lean{CKpoly} with exponents \lean{nExp}.
+\lean{LucasU/Statements.lean} states the ingredients for every $\varepsilon=\pm1$ and every real $t$ with
+$0<t\le\varphi^{-1}$ (\lean{Good}); the conjugate point is $\tau=\varepsilon/t$. \lean{LucasU/Unit.lean} contains
+Lemma~\ref{lem:unit}, and \lean{LucasU.irrational\_zetaU\_of} (in \lean{LucasU/Main.lean}) derives the theorem from the
+ingredients at $\varepsilon=-E$, $t=1/\eta$, using that $t$ and $\varepsilon/t$ are the two roots of
+$\tau^2+aE\tau-E$ and that $\sqrt D$ is irrational (\lean{norm\_ne\_zero}).
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Paper & Lean statement & Lean proof\\
+\midrule
+Lemma~\ref{lem:moments}, entries & \lean{EntryIdentity} & \lean{LucasU.Analytic.entryIdentity}\\
+Prop.~\ref{prop:decay} & \lean{DecayBound} & \lean{LucasU.Analytic.decayBound}\\
+Lemma~\ref{lem:ring}--Prop.~\ref{prop:global} & \lean{Integrality} & \lean{LucasU.Denom.integrality}\\
+Lemma~\ref{lem:phid}, Prop.~\ref{prop:cost} & \lean{CostBound} & \lean{LucasU.Cost.costBound}\\
+Prop.~\ref{prop:conj} & \lean{ConjBound} & \lean{LucasU.Conj.conjBound}\\
+Prop.~\ref{prop:nonvan} & \lean{Nonvanishing} & \lean{LucasU.NonVan.nonvanishing}\\
+Section~\ref{sec:proof} & & \lean{LucasU.irrational\_zetaU\_of}\\
+\bottomrule
+\end{tabular}
+\end{center}
+\lean{CostBound} is $\log|C_K(t)C_K(\varepsilon/t)|\le\frac{121}{100}K^3\log t^{-1}+CK^2(1+\log K)^2$, and
+$c_*<\frac{121}{100}<\frac{11}9$.
+
+\subsection*{Provenance}
+The formal development generalises that of \cite{Kri26}, parts of which are adapted from the Lean formalisation QZeta3
+\cite{QZ3} of \cite{UPL} (Apache License~2.0); every adapted file says so in its header.
+
+\subsection*{Use of AI tools}
+This work was carried out with substantial assistance from AI systems (Anthropic's Claude models), which were used to
+search the literature, to develop and check the proof, to write the Lean formalisation and to draft this text. The
+author directed the project and is responsible for its content. The formal proof is checked by the Lean kernel.
+
+% ===========================================================================
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}
