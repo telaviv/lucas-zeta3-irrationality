@@ -17,3 +17,13 @@ real quadratic unit: E = 1 with a ≥ 1, or E = −1 with a ≥ 3. This includes
   - `Main.lean`: `irrational_zetaU_of`.
   - `Roots.lean`.
   - Worker folders `Analytic/ NonVan/ Conj/ Denom/ Cost/`; the rules are in `WORKERS.md`.
+
+* **Complete 2026-11-15:**
+  - `LucasU.irrational_zetaU`, plus `irrational_pell` and `irrational_fib_mul`; standard axioms only
+    (`Axioms.lean`, `scripts/axioms.txt`).
+  - About 9200 lines, built by five parallel workers (branches merged, worktrees removed). `LucasU/Final.lean` is the top
+    file.
+  - Fidelity referee `FIDELITY_REFEREE.md`: PASS WITH FIXES, fixes applied.
+  - Paper `paper/main.tex` (`sh build.sh`). Name check: `python paper/check_lean_names.py`
+    (needs `PYTHONIOENCODING=utf-8`).
+  - The repository URL in the paper is a TODO; the owner decides and pushes.
