@@ -1,0 +1,4 @@
+'LucasU.irrational_zetaU' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LucasU.irrational_pell' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LucasU.irrational_fib_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LucasU.hasSum_zetaU' depends on axioms: [propext, Classical.choice, Quot.sound]
